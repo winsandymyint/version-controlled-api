@@ -1,6 +1,6 @@
 var path = require('path'),
     rootPath = path.normalize(__dirname + '/..'),
-    env = process.env.NODE_ENV || 'development';
+    env = process.env.NODE_ENV || 'production';
 
 var config = {
   development: {
@@ -27,7 +27,7 @@ var config = {
       name: 'vault-dragon'
     },
     port: 3000,
-    db: 'mongodb://localhost/vault-dragon-production'
+    db: 'mongodb://172.104.63.198/vault-dragon-production'
   }
 };
 
