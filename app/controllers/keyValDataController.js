@@ -13,33 +13,68 @@ function getAllKeyValData( req, res ){
 
 function upsertKeyValData( req, res ){
   let key = Object.keys(req.body)[0];
-  let body = {
+  let dataObj = {
     key : key,
-    value : req.body[key],
-    $setOnInsert: {
+    values : [{
+      value : req.body[key],
       createdAt: Date.now()
-    }
+    }]
   }
-  KvData.findOneAndUpdate({ key : key }, body , { upsert:true, new : true}, function(err, data){
-    if(err)
-     return res.status(500).json(err);
-    return res.status(200).json(data.value);
-  });
+  KvData.findOne({key: key})
+  .then(data=>{
+    if(data){
+      //Update the values
+      data.values.push(dataObj.values[0])
+      data.save((err,data)=>{
+        if(err)
+          return(res.status(500).json(err));
+        return res.status(200).json(dataObj.values[0]['value']);
+      });
+    }else{
+      //Insert new record
+      let newKvData = new KvData(dataObj);
+      newKvData.save((err,data)=>{
+        if(err)
+          return(res.status(500).json(err));
+        return res.status(200).json(dataObj.values[0]['value']);
+      });
+    }
+  })
+  .catch(err=>{
+    return res.status(500).json(err);
+  })
 }
 
 function getKeyValDataByKey( req, res ){
   let searchQuery = {};
   let key = req.params.key;
-  let timestamp = req.query.timestamp? (new Date(parseInt(req.query.timestamp))).toISOString() : '' ;
+  let timestamp = req.query.timestamp? (new Date(parseInt(req.query.timestamp))) : '' ;
   searchQuery.key = key;
-  timestamp ? searchQuery.createdAt = {$eq : timestamp} : '';
 
   KvData.findOne(searchQuery).then((data)=>{
-    return res.status(200).json(data.value);
+    //NEED to check for timestamp
+    //timestamp present, filter and response back value
+    if(data){
+      if(timestamp){
+        let returnData = data.values.filter(function (val) {
+          return val.createdAt+'' == timestamp+'';
+        }).pop();
+        return res.status(200).json(returnData.value);
+      }else{
+        //if not, get the last value from the values array which is the latest
+        return res.status(200).json(getLatestValue(data.values));
+      }
+    }else{
+      return res.status(404).json({message : 'No record found.'});
+    }
   })
   .catch((err)=>{
     return(res.status(500).json(err));
   })
+}
+
+function getLatestValue(arr){
+  return arr[arr.length-1]['value'];
 }
 
 module.exports = {
