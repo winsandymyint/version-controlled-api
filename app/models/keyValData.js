@@ -5,7 +5,7 @@ var DataSchema = new Schema({
 	key: {
  		type: String, required: true ,trim:true
 	},
-  value: {
+  	value: {
  		type: String, required: true
 	},
 	createdAt : {

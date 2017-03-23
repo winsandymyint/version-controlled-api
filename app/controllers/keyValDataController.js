@@ -32,7 +32,7 @@ function getKeyValDataByKey( req, res ){
   let key = req.params.key;
   let timestamp = req.query.timestamp? (new Date(parseInt(req.query.timestamp))).toISOString() : '' ;
   searchQuery.key = key;
-  timestamp ? searchQuery.createdDateTime = {$eq : timestamp} : '';
+  timestamp ? searchQuery.createdAt = {$eq : timestamp} : '';
 
   KvData.find(searchQuery).then((data)=>{
     return res.status(200).json(data);
