@@ -66,3 +66,5 @@ Run with ```node or nodemon```
 Development: ```node app --development```
 
 Production: ```node app --production```
+
+Test: ```npm test```
