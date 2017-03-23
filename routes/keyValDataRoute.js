@@ -9,5 +9,5 @@ router.route( '/object/:key' )
   .get( kvCtrl.getKeyValDataByKey )
 
 module.exports = function(app){
-	app.use('/api', router);
+	app.use('/', router);
 };

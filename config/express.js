@@ -31,6 +31,11 @@ module.exports = function(app, config) {
     require(route)(app);
   });
 
+  app.get('/',function(req,res){
+    res.redirect('/welcome');
+  })
+  app.use('/welcome', express.static(process.cwd() + '/public/index.html'));
+
   app.all('*',function(req,res){
   //not found
     res.sendStatus(404);

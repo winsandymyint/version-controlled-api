@@ -23,7 +23,7 @@ function upsertKeyValData( req, res ){
   KvData.findOneAndUpdate({ key : key }, body , { upsert:true, new : true}, function(err, data){
     if(err)
      return res.status(500).json(err);
-    return res.status(200).json(data);
+    return res.status(200).json(data.value);
   });
 }
 
@@ -34,8 +34,8 @@ function getKeyValDataByKey( req, res ){
   searchQuery.key = key;
   timestamp ? searchQuery.createdAt = {$eq : timestamp} : '';
 
-  KvData.find(searchQuery).then((data)=>{
-    return res.status(200).json(data);
+  KvData.findOne(searchQuery).then((data)=>{
+    return res.status(200).json(data.value);
   })
   .catch((err)=>{
     return(res.status(500).json(err));
