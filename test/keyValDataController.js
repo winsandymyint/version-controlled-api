@@ -1,9 +1,10 @@
-"use strict";
+'use strict';
 
 const KvData = require('../app/models/keyValData');
 
 //Require the dev-dependencies
 let chai = require('chai');
+var expect = chai.expect;
 let chaiHttp = require('chai-http');
 let server = require('../app');
 let should = chai.should();
@@ -21,7 +22,7 @@ describe('KvData', () => {
     * Test the /GET route
     */
     describe('/GET object', () => {
-        it('it should GET all object', (done) => {
+        it('it should GET all objects', (done) => {
           chai.request(server)
               .get('/object')
               .end((err, res) => {
@@ -32,58 +33,39 @@ describe('KvData', () => {
               });
         });
     });
-
     /*
      * Test the /POST route
      */
      describe('/POST object', () => {
-        /* it('it should not POST an object without key field', (done) => {
-           let data = {
-               key1: "Testing"
-           }
-           chai.request(server)
-               .post('/object')
-               .send(data)
-               .end((err, res) => {
-                   res.should.have.status(200);
-                   res.body.should.have.property('errors');
-                   res.body.should.to.have.any.keys('bar', 'baz');
-                 done();
-               });
-         });*/
          it('it should POST an object ', (done) => {
                  let data = {
-                   key1: "Testing"
+                   key1: 'Value 1'
                  }
                  chai.request(server)
                      .post('/object')
                      .send(data)
                      .end((err, res) => {
                          res.should.have.status(200);
-                         res.body.should.to.be.a('object');
+                         res.body.should.be.a('string');
                        done();
                      });
                });
-
      });
-     /*
-       * Test the /GET/:id route
-       */
-       describe('/GET/:id object', () => {
-           it('it should GET a object by the given key', (done) => {
-             let data = new Object({ key: "Hello"});
-             data.save((err, object) => {
+    /*
+    * Test the /GET/:id route
+    */
+    describe('/GET/:id object', () => {
+         it('it should GET a value by the given id', (done) => {
+           let data = new KvData({ 'key': "value 1"});
+           data.save((err, book) => {
                  chai.request(server)
-                 .get('/object/' + data.key)
-                 .send(data)
+                 .get('/object')
                  .end((err, res) => {
                      res.should.have.status(200);
-                     res.body.should.be.a('string');
-                     res.body.should.have.property('key').eql(object.key);
                    done();
                  });
-             });
-
            });
-       });
+
+         });
+     });
 });
