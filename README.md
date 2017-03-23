@@ -58,8 +58,11 @@ Endpoint: /object/mykey?timestamp=1440568980 [6.03pm]
 Response: value1
 ```
 
-NOTE: Run with ```node or nodemon```
+NOTE: 
+```npm install --production```  #for production
 
-Development: ```node app```
+Run with ```node or nodemon```
+
+Development: ```node app --development```
 
 Production: ```node app --production```
